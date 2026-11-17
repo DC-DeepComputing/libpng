@@ -4454,7 +4454,7 @@ png_do_expand_palette(png_structrp png_ptr, png_row_infop row_info,
                dp = row + ((size_t)row_width << 2) - 1;
 
                i = 0;
-#ifdef PNG_ARM_NEON_INTRINSICS_AVAILABLE
+#if defined(PNG_ARM_NEON_INTRINSICS_AVAILABLE)
                if (png_ptr->riffled_palette != NULL)
                {
                   /* The RGBA optimization works with png_ptr->bit_depth == 8
@@ -4491,10 +4491,12 @@ png_do_expand_palette(png_structrp png_ptr, png_row_infop row_info,
                sp = row + (size_t)row_width - 1;
                dp = row + (size_t)row_width * 3 - 1;
                i = 0;
-#ifdef PNG_ARM_NEON_INTRINSICS_AVAILABLE
+#if defined(PNG_ARM_NEON_INTRINSICS_AVAILABLE)
                i = png_do_expand_palette_rgb8_neon(png_ptr, row_info, row,
                    &sp, &dp);
 #else
+               /* RVV rgb8 expand measured 0.86x end-to-end on X100 (three
+                * strided byte stores dominate); left un-dispatched, C wins. */
                PNG_UNUSED(png_ptr)
 #endif
 
@@ -4913,6 +4915,9 @@ png_do_read_transformations(png_structrp png_ptr, png_row_infop row_info)
       if (row_info->color_type == PNG_COLOR_TYPE_PALETTE)
       {
 #ifdef PNG_ARM_NEON_INTRINSICS_AVAILABLE
+         /* Only RGBA expansion (num_trans > 0) needs the riffled table.
+          * The RVV build builds it lazily inside
+          * png_do_expand_palette_rgba8_rvv_full() instead. */
          if ((png_ptr->num_trans > 0) && (png_ptr->bit_depth == 8))
          {
             if (png_ptr->riffled_palette == NULL)
@@ -4924,8 +4929,21 @@ png_do_read_transformations(png_structrp png_ptr, png_row_infop row_info)
             }
          }
 #endif
+#if defined(PNG_ARM_NEON_INTRINSICS_AVAILABLE)
          png_do_expand_palette(png_ptr, row_info, png_ptr->row_buf + 1,
              png_ptr->palette, png_ptr->trans_alpha, png_ptr->num_trans);
+#elif defined(PNG_RISCV_RVV_INTRINSICS_AVAILABLE)
+         /* RVV RGBA expand dispatched here at the call site rather than
+          * inside png_do_expand_palette: a call adjacent to its scalar
+          * loops degrades GCC register allocation ~3x (X100 measured). */
+         if (!png_do_expand_palette_rgba8_rvv_full(png_ptr, row_info,
+             png_ptr->row_buf + 1))
+            png_do_expand_palette(png_ptr, row_info, png_ptr->row_buf + 1,
+                png_ptr->palette, png_ptr->trans_alpha, png_ptr->num_trans);
+#else
+         png_do_expand_palette(png_ptr, row_info, png_ptr->row_buf + 1,
+             png_ptr->palette, png_ptr->trans_alpha, png_ptr->num_trans);
+#endif
       }
 
       else

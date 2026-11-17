@@ -344,6 +344,7 @@ if(PNG_HARDWARE_OPTIMIZATIONS)
       endif()
       set(libpng_riscv_sources
           riscv/filter_rvv_intrinsics.c
+          riscv/palette_rvv_intrinsics.c
           riscv/riscv_init.c)
       if(PNG_RISCV_RVV STREQUAL "on")
         add_definitions(-DPNG_RISCV_RVV_OPT=2)

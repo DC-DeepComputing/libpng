@@ -164,7 +164,8 @@ endif
 if PNG_RISCV_RVV
 noinst_LTLIBRARIES= libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv.la
 libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_SOURCES = riscv/riscv_init.c\
-        riscv/filter_rvv_intrinsics.c
+        riscv/filter_rvv_intrinsics.c\
+        riscv/palette_rvv_intrinsics.c
 libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_CFLAGS = -march=rv64gv
 libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@_la_LIBADD = libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv.la
 endif

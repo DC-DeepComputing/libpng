@@ -243,9 +243,11 @@ libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@lsx_la_LINK = $(LIBTOOL) $(AM_V_lt) \
 @PNG_LOONGARCH_LSX_TRUE@am_libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@lsx_la_rpath =
 libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_LIBADD =
 am__libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_SOURCES_DIST =  \
-	riscv/riscv_init.c riscv/filter_rvv_intrinsics.c
+	riscv/riscv_init.c riscv/filter_rvv_intrinsics.c \
+	riscv/palette_rvv_intrinsics.c
 @PNG_RISCV_RVV_TRUE@am_libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_OBJECTS = riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-riscv_init.lo \
-@PNG_RISCV_RVV_TRUE@	riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-filter_rvv_intrinsics.lo
+@PNG_RISCV_RVV_TRUE@	riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-filter_rvv_intrinsics.lo \
+@PNG_RISCV_RVV_TRUE@	riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.lo
 libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_OBJECTS =  \
 	$(am_libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_OBJECTS)
 libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_LINK = $(LIBTOOL) $(AM_V_lt) \
@@ -362,6 +364,7 @@ am__depfiles_remade = ./$(DEPDIR)/png.Plo ./$(DEPDIR)/pngerror.Plo \
 	powerpc/$(DEPDIR)/filter_vsx_intrinsics.Plo \
 	powerpc/$(DEPDIR)/powerpc_init.Plo \
 	riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-filter_rvv_intrinsics.Plo \
+	riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.Plo \
 	riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-riscv_init.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -897,7 +900,8 @@ libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@_la_SOURCES = png.c pngerror.c \
 @PNG_LOONGARCH_LSX_TRUE@noinst_LTLIBRARIES = libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@lsx.la
 @PNG_RISCV_RVV_TRUE@noinst_LTLIBRARIES = libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv.la
 @PNG_RISCV_RVV_TRUE@libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_SOURCES = riscv/riscv_init.c\
-@PNG_RISCV_RVV_TRUE@        riscv/filter_rvv_intrinsics.c
+@PNG_RISCV_RVV_TRUE@        riscv/filter_rvv_intrinsics.c\
+@PNG_RISCV_RVV_TRUE@        riscv/palette_rvv_intrinsics.c
 
 @PNG_RISCV_RVV_TRUE@libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_CFLAGS = -march=rv64gv
 @PNG_LOONGARCH_LSX_TRUE@libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@_la_LIBADD = libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@lsx.la
@@ -1173,6 +1177,9 @@ riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-riscv_init.lo:  \
 riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-filter_rvv_intrinsics.lo:  \
 	riscv/$(am__dirstamp) riscv/$(DEPDIR)/$(am__dirstamp)
 
+riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.lo:  \
+	riscv/$(am__dirstamp) riscv/$(DEPDIR)/$(am__dirstamp)
+
 libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv.la: $(libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_OBJECTS) $(libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_DEPENDENCIES) $(EXTRA_libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_LINK) $(am_libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_rpath) $(libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_OBJECTS) $(libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_LIBADD) $(LIBS)
 contrib/tools/$(am__dirstamp):
@@ -1349,6 +1356,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@powerpc/$(DEPDIR)/filter_vsx_intrinsics.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@powerpc/$(DEPDIR)/powerpc_init.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-filter_rvv_intrinsics.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-riscv_init.Plo@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -1408,6 +1416,13 @@ riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-filter_rvv_intrinsics.lo: riscv/f
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='riscv/filter_rvv_intrinsics.c' object='riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-filter_rvv_intrinsics.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_CFLAGS) $(CFLAGS) -c -o riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-filter_rvv_intrinsics.lo `test -f 'riscv/filter_rvv_intrinsics.c' || echo '$(srcdir)/'`riscv/filter_rvv_intrinsics.c
+
+riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.lo: riscv/palette_rvv_intrinsics.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_CFLAGS) $(CFLAGS) -MT riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.lo -MD -MP -MF riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.Tpo -c -o riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.lo `test -f 'riscv/palette_rvv_intrinsics.c' || echo '$(srcdir)/'`riscv/palette_rvv_intrinsics.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.Tpo riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='riscv/palette_rvv_intrinsics.c' object='riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la_CFLAGS) $(CFLAGS) -c -o riscv/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.lo `test -f 'riscv/palette_rvv_intrinsics.c' || echo '$(srcdir)/'`riscv/palette_rvv_intrinsics.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -2416,6 +2431,7 @@ distclean: distclean-am
 	-rm -f powerpc/$(DEPDIR)/filter_vsx_intrinsics.Plo
 	-rm -f powerpc/$(DEPDIR)/powerpc_init.Plo
 	-rm -f riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-filter_rvv_intrinsics.Plo
+	-rm -f riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.Plo
 	-rm -f riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-riscv_init.Plo
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -2507,6 +2523,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f powerpc/$(DEPDIR)/filter_vsx_intrinsics.Plo
 	-rm -f powerpc/$(DEPDIR)/powerpc_init.Plo
 	-rm -f riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-filter_rvv_intrinsics.Plo
+	-rm -f riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-palette_rvv_intrinsics.Plo
 	-rm -f riscv/$(DEPDIR)/libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@rvv_la-riscv_init.Plo
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

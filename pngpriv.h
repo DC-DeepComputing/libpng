@@ -1688,6 +1688,20 @@ PNG_INTERNAL_FUNCTION(void, png_read_filter_row_paeth3_rvv,
 PNG_INTERNAL_FUNCTION(void, png_read_filter_row_paeth4_rvv,
    (png_row_infop row_info, png_bytep row, png_const_bytep prev_row),
    PNG_EMPTY);
+PNG_INTERNAL_FUNCTION(void, png_riffle_palette_rvv,
+   (png_structrp), PNG_EMPTY);
+PNG_INTERNAL_FUNCTION(int, png_do_expand_palette_rgba8_rvv,
+   (png_structrp, png_row_infop, png_const_bytep,
+    const png_bytepp, const png_bytepp), PNG_EMPTY);
+PNG_INTERNAL_FUNCTION(int, png_do_expand_palette_rgb8_rvv,
+   (png_structrp, png_row_infop, png_const_bytep,
+    const png_bytepp, const png_bytepp), PNG_EMPTY);
+/* Full RGBA palette expand: RVV chunks + scalar tail + row_info update.
+ * Dispatched at the png_do_expand_palette() call site in pngrtran.c (NOT
+ * inside it): a call adjacent to its scalar loops degrades GCC register
+ * allocation ~3x on X100. */
+PNG_INTERNAL_FUNCTION(int, png_do_expand_palette_rgba8_rvv_full,
+   (png_structrp, png_row_infop, png_bytep), PNG_EMPTY);
 #endif
 
 /* Choose the best filter to use and filter the row data */
