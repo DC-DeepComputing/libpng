@@ -29,15 +29,20 @@ png_init_filter_functions_rvv(png_structp pp, unsigned int bpp)
 
    if (bpp == 3)
    {
-      pp->read_filter[PNG_FILTER_VALUE_AVG-1] = png_read_filter_row_avg3_rvv;
-      pp->read_filter[PNG_FILTER_VALUE_PAETH-1] = png_read_filter_row_paeth3_rvv;
+      /* 守卫（2026-11-11 X100 实测，16KB 行内核）：
+       *   avg3   0.97x（串行链 vaaddu 延迟已到界，VL=3 发射开销吃掉收益）
+       *   paeth3 0.78x（u16 域逐像素预测器，3 lane 喂不饱指令开销）
+       * 两者 < 1x，按内核级守卫回退 C（bit-exact 由构造保证）。
+       * 保留：sub3 1.83x（m4 Hillis-Steele 扫描）、up 13x。 */
       pp->read_filter[PNG_FILTER_VALUE_SUB-1] = png_read_filter_row_sub3_rvv;
    }
    else if (bpp == 4)
    {
+      /* it2-guard: paeth4 X100 measured 0.89x (23.5 vs 26.4 MP/s, stable 6x)
+       * -> keep C. avg4 +5% and sub4 (m4 scan) stay RVV. */
       pp->read_filter[PNG_FILTER_VALUE_AVG-1] = png_read_filter_row_avg4_rvv;
-      pp->read_filter[PNG_FILTER_VALUE_PAETH-1] = png_read_filter_row_paeth4_rvv;
       pp->read_filter[PNG_FILTER_VALUE_SUB-1] = png_read_filter_row_sub4_rvv;
+
    }
 }
 
